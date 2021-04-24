@@ -3,7 +3,8 @@ image: node:12
 stages:
   - build
   - test
-  - deploy
+  - deploy staging
+  - deploy production
   - deployment tests
   - cache
 
@@ -57,14 +58,29 @@ test website:
     - sleep 3
     - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"
 
-deploy to surge: 
+deploy production: 
+  stage: deploy production
+  cache: {}
   except:
     - schedules
-  stage: deploy
-  cache: {}
+  environment:
+    name: production
+    url: http://michaelbruceallen.surge.sh
   script:
     - npm install --global surge
     - surge --project ./public --domain michaelbruceallen.surge.sh
+
+deploy staging: 
+  stage: deploy staging
+  cache: {}
+  except:
+    - schedules
+  environment:
+    name: staging
+    url: http://staging-michaelbruceallen.surge.sh
+  script:
+    - npm install --global surge
+    - surge --project ./public --domain staging-michaelbruceallen.surge.sh
 
 test deployment:
   except:
