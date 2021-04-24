@@ -5,6 +5,11 @@ stages:
   - test
   - deploy
 
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
 build website:
   stage: build
   script:
@@ -21,15 +26,6 @@ test artifact:
   stage: test
   script:
     - grep -q "Gatsby" ./public/index.html
-
-test website:
-  stage: test
-  script:
-    - npm install
-    - npm install -g gatsby-cli
-    - gatsby serve &
-    - sleep 5
-    - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"
 
 deploy to surge:
   stage: deploy
