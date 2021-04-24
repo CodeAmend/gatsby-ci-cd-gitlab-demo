@@ -8,6 +8,8 @@ stages:
   - cache
 
 update cache:
+  only:
+    - schedules
   stage: cache
   script: 
     - npm install
@@ -25,6 +27,8 @@ cache:
     - node_modules/
 
 build website:
+  except:
+    - schedules
   stage: build
   script:
     - echo $CI_COMMIT_SHORT_SHA
@@ -35,6 +39,8 @@ build website:
       - ./public
 
 test artifact:
+  except:
+    - schedules
   image: alpine
   stage: test
   cache: {}
@@ -42,6 +48,8 @@ test artifact:
     - grep -q "Gatsby" ./public/index.html
 
 test website:
+  except:
+    - schedules
   stage: test
   script:
     - gatsby serve &
@@ -49,6 +57,8 @@ test website:
     - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"
 
 deploy to surge: 
+  except:
+    - schedules
   stage: deploy
   cache: {}
   script:
@@ -56,6 +66,8 @@ deploy to surge:
     - surge --project ./public --domain michaelbruceallen.surge.sh
 
 test deployment:
+  except:
+    - schedules
   image: alpine
   stage: deployment tests
   cache: {}
