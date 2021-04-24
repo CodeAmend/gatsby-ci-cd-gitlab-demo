@@ -28,6 +28,7 @@ test website:
     - npm install
     - npm install -g gatsby-cli
     - gatsby serve &
+    - sleep 5
     - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"
 
 deploy to surge:
