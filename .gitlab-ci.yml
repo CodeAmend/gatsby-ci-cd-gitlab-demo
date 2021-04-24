@@ -8,6 +8,10 @@ stages:
   - deployment tests
   - cache
 
+variables:
+  STAGING_DOMAIN: staging-michaelbruceallen.surge.sh
+  PRODUCTION_DOMAIN: michaelbruceallen.surge.sh
+
 update cache:
   only:
     - schedules
@@ -65,10 +69,10 @@ deploy production:
     - schedules
   environment:
     name: production
-    url: http://michaelbruceallen.surge.sh
+    url: http://$PRODUCTION_DOMAIN
   script:
     - npm install --global surge
-    - surge --project ./public --domain michaelbruceallen.surge.sh
+    - surge --project ./public --domain $PRODUCTION_DOMAIN
 
 deploy staging: 
   stage: deploy staging
@@ -77,10 +81,10 @@ deploy staging:
     - schedules
   environment:
     name: staging
-    url: http://staging-michaelbruceallen.surge.sh
+    url: http://$STAGING_DOMAIN
   script:
     - npm install --global surge
-    - surge --project ./public --domain staging-michaelbruceallen.surge.sh
+    - surge --project ./public --domain $STAGING_DOMAIN
 
 test deployment:
   except:
