@@ -36,3 +36,5 @@ deploy to surge:
   script:
     - npm install --global surge
     - surge --project ./public --domain michaelbruceallen.surge.sh
+    - sleep 5
+    - curl "michaelbruceallen.surge.sh" | tac | tac | grep -q "Gatsby"
