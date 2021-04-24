@@ -5,6 +5,18 @@ stages:
   - test
   - deploy
   - deployment tests
+  - cache
+
+update cache:
+  stage: cache
+  script: 
+    - npm install
+    - npm install -g gatsby-cli
+  cache: 
+    key: ${CI_COMMIT_REF_SLUG}
+    policy: push
+    paths:
+      - node_modules/
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
@@ -16,8 +28,6 @@ build website:
   stage: build
   script:
     - echo $CI_COMMIT_SHORT_SHA
-    - npm install
-    - npm install -g gatsby-cli
     - gatsby build
     - sed -i "s/%%VERSION%%/$CI_COMMIT_SHORT_SHA/" ./public/index.html
   artifacts:
@@ -34,8 +44,6 @@ test artifact:
 test website:
   stage: test
   script:
-    - npm install
-    - npm install -g gatsby-cli
     - gatsby serve &
     - sleep 3
     - curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"
