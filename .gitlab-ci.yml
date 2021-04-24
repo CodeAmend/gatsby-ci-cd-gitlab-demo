@@ -17,5 +17,4 @@ build website:
 test artifact:
   stage: test
   script:
-    - grep "Gatsby" ./public/index.html
-    - grep "&&&&&" ./public/index.html
+    - grep -q "Gatsby" ./public/index.html
