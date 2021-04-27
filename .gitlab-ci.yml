@@ -1,12 +1,12 @@
 image: node:12
 
 stages:
-  - build
-  - test
-  - deploy staging
-  - deploy production
-  - deployment tests
   - cache
+  - build
+  - deploy staging
+  - test
+  - deploy production
+  - production tests
 
 variables:
   STAGING_DOMAIN: staging-michaelbruceallen.surge.sh
@@ -65,6 +65,8 @@ test website:
 deploy production: 
   stage: deploy production
   cache: {}
+  when: manual
+  allow_failure: false
   except:
     - schedules
   environment:
@@ -86,11 +88,11 @@ deploy staging:
     - npm install --global surge
     - surge --project ./public --domain $STAGING_DOMAIN
 
-test deployment:
+test production:
   except:
     - schedules
   image: alpine
-  stage: deployment tests
+  stage: production tests
   cache: {}
   script:
     - apk add --no-cache curl
